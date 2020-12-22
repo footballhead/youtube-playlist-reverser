@@ -118,8 +118,13 @@ def main():
                 # Have to drill into the message deets but if this is a quota exdeeding situation then retry.
 
                 if youtube_response_has_error(r.json(), 'quotaExceeded'):
-                    print('\nHit YouTube quota, backing off and retrying')
+                    print('\nHit YouTube quota, immediately retrying')
                     time.sleep(1)
+                    continue
+
+                if youtube_response_has_error(r.json(), 'userRateLimitExceeded'):
+                    print('\nHit rate limit, backing off and retrying')
+                    time.sleep(5)
                     continue
 
                 # No idea what other 403 errors are so fall through and treat as fatal 
